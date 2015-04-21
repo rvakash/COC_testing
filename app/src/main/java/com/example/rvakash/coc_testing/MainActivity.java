@@ -1,6 +1,6 @@
 package com.example.rvakash.coc_testing;
 
-import android.annotation.TargetApi;
+//import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,8 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-//tdicola
+
+import org.w3c.dom.Text;
+
+/*//tdicola
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
@@ -35,10 +39,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+*/
 public class MainActivity extends ActionBarActivity {
 
-    EditText sendtext;
+    TextView sendtext;
     Button sendbutton;
     Button templatesbutton;
     Button homebutton;
@@ -48,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
     /////////////////////////TDICOLA///////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
     // UUIDs for UAT service and associated characteristics.
-    public static UUID UART_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
+  /*  public static UUID UART_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
     public static UUID TX_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
     public static UUID RX_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
     // UUID for the BTLE client characteristic which is necessary for notifications.
@@ -147,7 +151,7 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
-
+*/
 ///////////////////////////////////////////////////////////////////////////////////
     /////////////////////////TDICOLA///////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
@@ -157,24 +161,24 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sendbutton = (Button) findViewById(R.id.send);
-        sendtext = (EditText) findViewById(R.id.input);
+        sendtext = (TextView) findViewById(R.id.input);
         templatesbutton = (Button) findViewById(R.id.templatesbutton);
         homebutton = (Button) findViewById(R.id.homebutton);
         settingsbutton = (Button) findViewById(R.id.settingsbutton);
 ///////////////////////////////////TDICOLA///////////////////////////////////////////////
-        // Grab references to UI elements.
+  /*      // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         input = (EditText) findViewById(R.id.input);
 
         adapter = BluetoothAdapter.getDefaultAdapter();
 ///////////////////////////////////TDICOLA////////////////////////////////////////////////
-
+*/
         sendbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast toast = new Toast(getApplicationContext());
                 Toast.makeText(MainActivity.this, sendtext.getText(), toast.LENGTH_SHORT).show();
-                String message = input.getText().toString();
+    /*            String message = input.getText().toString();
                 if (tx == null || message == null || message.isEmpty()) {
                     // Do nothing if there is no device or message to send.
                     return;
@@ -187,7 +191,7 @@ public class MainActivity extends ActionBarActivity {
                 else {
                     writeLine("Couldn't write TX characteristic!");
                 }
-            }
+     */       }
 
         });
 
@@ -216,7 +220,7 @@ public class MainActivity extends ActionBarActivity {
     ///////////////////////////////////////////////////////////////////////////////////
     // OnResume, called right before UI is displayed.  Start the BTLE connection.
     //@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    @Override
+  /*  @Override
     protected void onResume() {
         super.onResume();
         // Scan for all BTLE devices.
@@ -261,7 +265,7 @@ public class MainActivity extends ActionBarActivity {
     // Write some text to the messages text view.
     // Care is taken to do this on the main UI thread so writeLine can be called
     // from any thread (like the BTLE callback).
-    private void writeLine(final CharSequence text) {
+  /*  private void writeLine(final CharSequence text) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -351,6 +355,6 @@ public class MainActivity extends ActionBarActivity {
     ///////////////////////////////////////////////////////////////////////////////////
 
 
-
+*/
 
 }
