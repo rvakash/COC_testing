@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.rvakash.coc_testing.Third_Activity"
+    android:id="@+id/background"
+    android:visibility="visible"
+    android:background="#ffffff">
+
+    <Button
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:text="templates"
+        android:id="@+id/templatesbutton"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/homebutton" />
+
+    <Button
+        android:layout_width="102dp"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:id="@+id/homebutton"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:id="@+id/settingsbutton"
+        android:layout_toLeftOf="@+id/homebutton"  />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/coc1"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="245dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:src="@drawable/bluetooth_grey"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        android:layout_below="@+id/templatesbutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="#ffffff" />
+
+
+</RelativeLayout>
