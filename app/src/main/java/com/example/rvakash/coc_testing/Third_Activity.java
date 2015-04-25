@@ -403,6 +403,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
@@ -415,6 +417,8 @@ public class Third_Activity extends ActionBarActivity {
 
     Button homebutton, templatesbutton, settingsbutton;
     ImageButton bluetooth;
+    boolean flag = false;
+    TextView conn;
 
 
     // UI elements
@@ -439,10 +443,12 @@ public class Third_Activity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third_);
+
         templatesbutton = (Button) findViewById(R.id.templatesbutton);
         homebutton = (Button) findViewById(R.id.homebutton);
         settingsbutton = (Button) findViewById(R.id.settingsbutton);
         bluetooth = (ImageButton) findViewById(R.id.imageButton);
+        conn = (TextView) findViewById(R.id.textView2);
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         //input = (EditText) findViewById(R.id.input);
@@ -450,6 +456,7 @@ public class Third_Activity extends ActionBarActivity {
         //Check if bluetooth is enabled. If enabled display bluetooth_col and "Bluetooth is already turned on!". Else ask user to "turn it on."
         adapter = BluetoothAdapter.getDefaultAdapter();
         ////When home button is clicked open a new activity home
+
         homebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -468,15 +475,16 @@ public class Third_Activity extends ActionBarActivity {
         settingsbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = new Toast(getApplicationContext());
-                Toast.makeText(Third_Activity.this, "Bluetooth is turned on! and connected to display", toast.LENGTH_LONG).show();
                 Intent settings = new Intent(Third_Activity.this, Third_Activity.class);
                 startActivity(settings);
             }
         });
         setupUI();
         bluetoothImgBtn();
+
+
     }
+
     public void setupUI() {
 
 
@@ -485,16 +493,14 @@ public class Third_Activity extends ActionBarActivity {
             bluetooth = (ImageButton) findViewById(R.id.imageButton);
             bluetooth.setImageResource(R.drawable.bluetooth_col);
             Toast toast = new Toast(getApplicationContext());
-            Toast.makeText(Third_Activity.this, "Bluetooth is turned on! and connected to display", toast.LENGTH_LONG).show();
+           // Toast.makeText(Third_Activity.this, "Bluetooth is turned on!", toast.LENGTH_LONG).show();
 
-            // onResume();
-           // onStop();
-             OnResume();
-             OnStop();
+            OnResume();
+            OnStop();
         } else {
             Toast toast = new Toast(getApplicationContext());
             Toast.makeText(Third_Activity.this, "Bluetooth is not on. Click on Bluetooth to turn it on", toast.LENGTH_LONG).show();
-
+            connLine("Disconnected!");
         }
     }
     public void bluetoothImgBtn(){
@@ -508,6 +514,7 @@ public class Third_Activity extends ActionBarActivity {
                     Toast toast = new Toast(getApplicationContext());
                     Toast.makeText(Third_Activity.this, "Bluetooth is turned off! You are now disconnected", toast.LENGTH_LONG).show();
                     bluetooth.setImageResource(R.drawable.bluetooth_grey);
+                    connLine("Disconnected!");
                 } else if (!adapter.isEnabled()) {
                     //Intent settings = new Intent(Third_Activity.this, Third_Activity.class);
                     //startActivity(settings);
@@ -526,7 +533,7 @@ public class Third_Activity extends ActionBarActivity {
                     adapter.enable();
                     bluetooth.setImageResource(R.drawable.bluetooth_col);
                     Toast toast = new Toast(getApplicationContext());
-                    Toast.makeText(Third_Activity.this, "Bluetooth is turned on manually! Click connect", toast.LENGTH_SHORT).show();
+                    Toast.makeText(Third_Activity.this, "Bluetooth is turned on manually! Click connect", toast.LENGTH_LONG).show();
                     // while(!adapter.isEnabled());
                 }
 
@@ -557,13 +564,18 @@ public class Third_Activity extends ActionBarActivity {
 //        Toast.makeText(Third_Activity.this, "onResume check toast!", toast.LENGTH_LONG).show();
 
         //writeLine("Scanning for devices...");
+        Toast toast = new Toast(getApplicationContext());
+        Toast.makeText(Third_Activity.this, "onResume!", toast.LENGTH_LONG).show();
+
+        System.out.println("here");
         adapter.startLeScan(scanCallback);
-    }
+
+        }
 
     // OnStop, called right before the activity loses foreground focus.  Close the BTLE connection.
     //@Override
     private void OnStop() {
-        super.onStop();
+//        super.onStop();
         if (gatt != null) {
             // For better reliability be careful to disconnect and close the connection.
             gatt.disconnect();
@@ -585,6 +597,17 @@ public class Third_Activity extends ActionBarActivity {
             }
         });
     }
+    private void connLine(final CharSequence text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                conn.clearComposingText();
+                conn.setText("");
+                conn.append(text);
+                conn.append("\n");
+            }
+        });
+    }
 
 
     // BTLE device scanning callback.
@@ -594,15 +617,23 @@ public class Third_Activity extends ActionBarActivity {
         //@Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             writeLine("Found device: " + bluetoothDevice.getAddress());
+//            Toast toast = new Toast(getApplicationContext());
+//            Toast.makeText(Third_Activity.this, "Connected!", toast.LENGTH_LONG).show();
+
             // Check if the device has the UART service.
             if (parseUUIDs(bytes).contains(UART_UUID)) {
                 // Found a device, stop the scan.
                 adapter.stopLeScan(scanCallback);
                 writeLine("Found UART service!");
+                flag = true;
+
                 // Connect to the device.
                 // Control flow will now go to the callback functions when BTLE events occur.
                 gatt = bluetoothDevice.connectGatt(getApplicationContext(), false, callback);
 
+            }
+            else{
+               // connLine("No display!");
             }
         }
     };
@@ -669,6 +700,9 @@ public class Third_Activity extends ActionBarActivity {
             super.onConnectionStateChange(gatt, status, newState);
             if (newState == BluetoothGatt.STATE_CONNECTED) {
                 writeLine("Connected!");
+                flag = true;
+                if (adapter.isEnabled())
+                connLine("Connected!");
                 // Discover services.
                 if (!gatt.discoverServices()) {
                     writeLine("Failed to start discovering services!");
@@ -676,6 +710,7 @@ public class Third_Activity extends ActionBarActivity {
             }
             else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                 writeLine("Disconnected!");
+                connLine("Disconnected!");
             }
             else {
                 writeLine("Connection state changed.  New state: " + newState);
@@ -690,6 +725,8 @@ public class Third_Activity extends ActionBarActivity {
             super.onServicesDiscovered(gatt, status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 writeLine("Service discovery completed!");
+                flag = true;
+
             }
             else {
                 writeLine("Service discovery failed with status: " + status);
